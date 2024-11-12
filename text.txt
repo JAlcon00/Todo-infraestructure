@@ -1,0 +1,10 @@
+adidas
+containers
+docker-install.sh
+keys
+main.tf
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
+text.txt
+variables.tf
