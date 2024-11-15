@@ -1,16 +1,7 @@
 name: Deploy Jesus Server
 
 on:
-   workflow_disparch:
-      inputs:
-        action:
-          description: 'Action to perform'
-          required: true
-          default: 'deploy'
-        branch:
-          description: 'Branch to deploy'
-          required: true
-          default: 'main'
+   workflow_dispatch:
 
 env:
   AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
