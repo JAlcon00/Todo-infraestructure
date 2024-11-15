@@ -13,11 +13,13 @@ terraform {
       endpoints = {
         s3 = "https://sfo3.digitaloceanspaces.com"
       }
-      bucket = "devjalcon"
+      bucket = "devjesus"
       key = "terraform.tfstate"
+      skip_region_validation      = true
       skip_credentials_validation = true
-      skip_requesting_account_id = true
-      skip_metadata_api_check = true
+      skip_metadata_api_check     = true
+      skip_requesting_account_id  = true
+      skip_s3_checksum            = true
       region = "us-east-1"
   }
 }
@@ -25,14 +27,14 @@ terraform {
 
 //xd
 resource "digitalocean_project" "jesus_server_proyect" {
-  name        = "jesus_server_proyect2"
+  name        = "jesus_server_web"
   description = "Jalcon Server Proyect"
   resources   = [digitalocean_droplet.jesus_server_droplet.urn]
 
 }
 
 resource "digitalocean_ssh_key" "jesus_server_ssh_key" {
-  name       = "jesus_server_keys"
+  name       = "jesus_server_web_prod"
   public_key = file("./keys/jesus_server.pub")
 }
 
@@ -47,7 +49,7 @@ resource "digitalocean_droplet" "jesus_server_droplet" {
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /projects",
-      "touch /proyects/.env",
+      "touch /projects/.env",
       "echo \"MYSQL_DATABASE=${var.MYSQL_DATABASE}\" >> /projects/.env",
       "echo \"MYSQL_USER=${var.MYSQL_USER}\" >> /projects/.env",
       "echo \"MYSQL_HOST=${var.MYSQL_HOST}\" >> /projects/.env",

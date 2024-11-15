@@ -1,4 +1,4 @@
-name: Deploy Jesus Server
+name: Destroy Jesus Server
 
 on:
    workflow_dispatch:
