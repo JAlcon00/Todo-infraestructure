@@ -1,0 +1,51 @@
+name: Deploy Jesus Server
+
+on:
+   workflow_disparch:
+      inputs:
+        action:
+          description: 'Action to perform'
+          required: true
+          default: 'deploy'
+        branch:
+          description: 'Branch to deploy'
+          required: true
+          default: 'main'
+
+env:
+  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+  AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+  TF_VAR_DO_TOKEN: ${{ secrets.DO_TOKEN }}
+  TF_VAR_MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+  TF_VAR_MYSQL_USER: ${{ secrets.MYSQL_USER }}
+  TF_VAR_MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+  TF_VAR_MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.8
+          terraform_wrapper: false
+      - name: Create SSH keys from secrets
+        run: |
+          mkdir keys
+          echo "${{ secrets.SSH_PRIVATE_KEY}}" > ./keys/jesus_server
+          echo "${{ secrets.SSH_PUBLIC_KEY}}" > ./keys/jesus_server.pub
+          chmod 777 ./keys/jesus_server
+          chmod 777 ./keys/jesus_server.pub
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform format
+        run: terraform fmt
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
