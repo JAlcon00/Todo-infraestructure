@@ -32,7 +32,7 @@ resource "digitalocean_project" "jesus_server_proyect" {
 }
 
 resource "digitalocean_ssh_key" "jesus_server_ssh_key" {
-  name       = "jesus_server_key2"
+  name       = "jesus_server_keys"
   public_key = file("./keys/jesus_server.pub")
 }
 
