@@ -23,7 +23,7 @@ terraform {
 }
 
 
-
+//xd
 resource "digitalocean_project" "jesus_server_proyect" {
   name        = "jesus_server_proyect2"
   description = "Jalcon Server Proyect"
