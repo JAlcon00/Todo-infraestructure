@@ -49,11 +49,16 @@ resource "digitalocean_droplet" "jesus_server_droplet" {
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /projects",
+      "mkdir -p /volumnes/nginx/html",
+      "mkdir -p /volumnes/nginx/certs",
+      "mkdir -p /volumnes/nginc/vhostd",
       "touch /projects/.env",
       "echo \"MYSQL_DATABASE=${var.MYSQL_DATABASE}\" >> /projects/.env",
       "echo \"MYSQL_USER=${var.MYSQL_USER}\" >> /projects/.env",
       "echo \"MYSQL_HOST=${var.MYSQL_HOST}\" >> /projects/.env",
-      "echo \"MYSQL_ROOT_PASSWORD=${var.MYSQL_ROOT_PASSWORD}\" >> /projects/.env"
+      "echo \"MYSQL_ROOT_PASSWORD=${var.MYSQL_ROOT_PASSWORD}\" >> /projects/.env",
+      "echo \"DOMAIN=${var.DOMAIN}\" >> /projects/.env",
+      "echo \"USER_EMAIL=${var.USER_EMAIL}\" >> /projects/.env"
     ]
 
   }
@@ -77,33 +82,30 @@ resource "digitalocean_droplet" "jesus_server_droplet" {
   }
 }
 
-# resource "time_sleep" "wait_docker_install" {
-#   depends_on      = [digitalocean_droplet.jesus_server_droplet]
-#   create_duration = "130s"
+resource "time_sleep" "wait_docker_install" {
+  depends_on      = [digitalocean_droplet.jesus_server_droplet]
+  create_duration = "130s"
+}
 
 
-
-# }
-
-
-# resource "null_resource" "init_api" {
-#   depends_on = [ time_sleep.wait_docker_install] 
-#   provisioner "remote-exec" {
-#     inline = [ 
-#       "cd /projects",
-#       "docker-compose up -d"
-#      ]
-#     connection {
-#       type        = "ssh"
-#       user        = "root"
-#       private_key = file("./keys/jesus_server")
-#       host        = digitalocean_droplet.jesus_server_droplet.ipv4_address
-#     }
+resource "null_resource" "init_api" {
+  depends_on = [ time_sleep.wait_docker_install] 
+  provisioner "remote-exec" {
+    inline = [ 
+      "cd /projects",
+      "docker-compose up -d"
+     ]
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = file("./keys/jesus_server")
+      host        = digitalocean_droplet.jesus_server_droplet.ipv4_address
+    }
   
     
-#   }
+  }
   
-# }
+}
 
 /*
 
